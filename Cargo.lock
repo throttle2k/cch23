@@ -487,6 +487,7 @@ name = "ha-cch23"
 version = "0.1.0"
 dependencies = [
  "axum 0.7.5",
+ "serde",
  "shuttle-axum",
  "shuttle-runtime",
  "tokio",

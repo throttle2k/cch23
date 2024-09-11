@@ -16,7 +16,8 @@ async fn main() -> shuttle_axum::ShuttleAxum {
     let router = Router::new()
         .route("/", get(hello_world))
         .route("/-1/error", get(fake_error))
-        .merge(day1::get_routes());
+        .merge(day1::get_routes())
+        .merge(day4::get_routes());
 
     Ok(router.into())
 }
