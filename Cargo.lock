@@ -122,6 +122,7 @@ checksum = "3a6c9af12842a67734c9a2e355436e5d03b22383ed60cf13cd0c18fbfe3dcbcf"
 dependencies = [
  "async-trait",
  "axum-core 0.4.3",
+ "axum-macros",
  "bytes",
  "futures-util",
  "http 1.1.0",
@@ -187,6 +188,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "axum-macros"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "00c055ee2d014ae5981ce1016374e8213682aa14d9bf40e48ab48b5f3ef20eaa"
+dependencies = [
+ "heck 0.4.1",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.77",
+]
+
+[[package]]
 name = "backtrace"
 version = "0.3.74"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -206,6 +219,12 @@ name = "base64"
 version = "0.21.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9d297deb1925b89f2ccc13d7635fa0714f12c87adce1c75356b39ca9b7178567"
+
+[[package]]
+name = "base64"
+version = "0.22.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
 
 [[package]]
 name = "bitflags"
@@ -244,6 +263,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b62ac837cdb5cb22e10a256099b4fc502b1dfe560cb282963a974d7abd80e476"
 dependencies = [
  "shlex",
+]
+
+[[package]]
+name = "cch23"
+version = "0.1.0"
+dependencies = [
+ "axum 0.7.5",
+ "base64 0.22.1",
+ "serde",
+ "serde_json",
+ "shuttle-axum",
+ "shuttle-runtime",
+ "tokio",
 ]
 
 [[package]]
@@ -480,17 +512,6 @@ dependencies = [
  "tokio",
  "tokio-util",
  "tracing",
-]
-
-[[package]]
-name = "ha-cch23"
-version = "0.1.0"
-dependencies = [
- "axum 0.7.5",
- "serde",
- "shuttle-axum",
- "shuttle-runtime",
- "tokio",
 ]
 
 [[package]]
@@ -1605,7 +1626,7 @@ dependencies = [
  "async-stream",
  "async-trait",
  "axum 0.6.20",
- "base64",
+ "base64 0.21.7",
  "bytes",
  "h2",
  "http 0.2.12",

@@ -4,6 +4,7 @@ mod day1;
 mod day4;
 mod day5;
 mod day6;
+mod day7;
 
 async fn hello_world() -> &'static str {
     "Hello, world!"
@@ -21,7 +22,8 @@ async fn main() -> shuttle_axum::ShuttleAxum {
         .merge(day1::get_routes())
         .merge(day4::get_routes())
         .merge(day5::get_routes())
-        .merge(day6::get_routes());
+        .merge(day6::get_routes())
+        .merge(day7::get_routes());
 
     Ok(router.into())
 }
