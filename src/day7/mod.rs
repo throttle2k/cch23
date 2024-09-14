@@ -1,23 +1,27 @@
 use std::collections::HashMap;
 
+use anyhow::anyhow;
 use axum::{debug_handler, http::HeaderMap, routing::get, Json, Router};
 use base64::{engine::general_purpose, Engine};
 use serde::{Deserialize, Serialize};
 
-fn decode_secret(input: &str) -> String {
+use crate::error::AppError;
+
+fn decode_secret(input: &str) -> Result<String, anyhow::Error> {
     let encoded = input.strip_prefix("recipe=").unwrap();
     let decoded = general_purpose::STANDARD.decode(encoded).unwrap();
-    String::from_utf8(decoded).unwrap()
+    Ok(String::from_utf8(decoded)?)
 }
 
-async fn decode_recipe(headers: HeaderMap) -> String {
+async fn decode_recipe(headers: HeaderMap) -> Result<String, AppError> {
     let recipe = if let Some(header) = headers.get("Cookie") {
-        let encoded = header.to_str().unwrap();
+        let encoded = header.to_str()?;
         decode_secret(encoded)
     } else {
-        "".to_string()
+        return Err(AppError(anyhow!("Unable to decode recipe")));
     };
-    recipe
+
+    Ok(recipe?)
 }
 
 #[derive(Deserialize)]
@@ -48,14 +52,9 @@ impl BakeResponse {
 }
 
 #[debug_handler]
-async fn bake(headers: HeaderMap) -> Json<BakeResponse> {
-    let recipe = if let Some(header) = headers.get("Cookie") {
-        let encoded = header.to_str().unwrap();
-        decode_secret(encoded)
-    } else {
-        "".to_string()
-    };
-    let recipe: Recipe = serde_json::from_str(recipe.as_str()).unwrap();
+async fn bake(headers: HeaderMap) -> Result<Json<BakeResponse>, AppError> {
+    let recipe = decode_recipe(headers).await?;
+    let recipe: Recipe = serde_json::from_str(recipe.as_str())?;
     let mut max_cookies = Vec::<i64>::new();
     for (ingredient, amount) in recipe.recipe.iter() {
         if *amount > 0 {
@@ -63,7 +62,7 @@ async fn bake(headers: HeaderMap) -> Json<BakeResponse> {
         }
     }
     let max_cookies = max_cookies.iter().min().unwrap_or(&0);
-    Json(BakeResponse::bake(*max_cookies, &recipe))
+    Ok(Json(BakeResponse::bake(*max_cookies, &recipe)))
 }
 
 pub fn get_routes() -> Router {

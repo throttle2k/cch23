@@ -7,6 +7,7 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+pub mod error;
 
 async fn hello_world() -> &'static str {
     "Hello, world!"
