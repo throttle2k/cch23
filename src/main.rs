@@ -2,6 +2,7 @@ use axum::{http::StatusCode, routing::get, Router};
 
 mod day1;
 mod day11;
+mod day12;
 mod day4;
 mod day5;
 mod day6;
@@ -28,7 +29,8 @@ async fn main() -> shuttle_axum::ShuttleAxum {
         .merge(day6::get_routes())
         .merge(day7::get_routes())
         .merge(day8::get_routes())
-        .merge(day11::get_routes());
+        .merge(day11::get_routes())
+        .merge(day12::get_routes());
 
     Ok(router.into())
 }

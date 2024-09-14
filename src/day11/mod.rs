@@ -4,34 +4,14 @@ use axum::{
     async_trait,
     body::Bytes,
     extract::{FromRequest, Multipart, Request},
-    http::{header::CONTENT_TYPE, StatusCode},
-    response::IntoResponse,
+    http::header::CONTENT_TYPE,
     routing::post,
     Router,
 };
 use image::{GenericImageView, ImageReader};
 use tower_http::services::ServeDir;
 
-struct AppError(anyhow::Error);
-
-impl IntoResponse for AppError {
-    fn into_response(self) -> axum::response::Response {
-        (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Something went wrong: {}", self.0),
-        )
-            .into_response()
-    }
-}
-
-impl<E> From<E> for AppError
-where
-    E: Into<anyhow::Error>,
-{
-    fn from(err: E) -> Self {
-        Self(err.into())
-    }
-}
+use crate::error::AppError;
 
 struct PngImage(Bytes);
 
