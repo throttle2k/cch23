@@ -1,0 +1,99 @@
++./scripts/init_db.sh:3> set -eo pipefail
++./scripts/init_db.sh:5> command -v psql
++./scripts/init_db.sh:5> [ -x /usr/bin/psql ']'
++./scripts/init_db.sh:10> command -v sqlx
++./scripts/init_db.sh:10> [ -x /home/throttle/.cargo/bin//sqlx ']'
++./scripts/init_db.sh:15> DB_USER=postgres 
++./scripts/init_db.sh:16> DB_PASSWORD=password 
++./scripts/init_db.sh:17> DB_NAME=cch23 
++./scripts/init_db.sh:18> DB_PORT=5432 
++./scripts/init_db.sh:20> [[ -z '' ]]
++./scripts/init_db.sh:22> docker pod create --name postgres -p 9876:80 -p 5432:5432
+461279dbae10b21ad778b495b5672114bfd66c92099a39c50cb0a9e44dfbcad5
++./scripts/init_db.sh:23> docker run '--pod=postgres' -e 'PGADMIN_DEFAULT_EMAIL=admin@email.com' -e 'PGADMIN_DEFAULT_PASSWORD=password' --name pgadmin -d dpage/pgadmin4
+ada1e1f4420e9696d2006fe33b7ef508eeb03f5bb16a8f3330f2d85e205474f9
++./scripts/init_db.sh:28> docker run '--pod=postgres' -e 'POSTGRES_USER=postgres' -e 'POSTGRES_PASSWORD=password' -e 'POSTGRES_DB=cch23' --name postgres -d postgres
+Resolving "postgres" using unqualified-search registries (/etc/containers/registries.conf)
+Trying to pull docker.io/library/postgres:latest...
+Getting image source signatures
+Copying blob sha256:5b21d7a5cb0b8f14e2f2561fb261436b6c76829e983371acb90252223fbaffbc
+Copying blob sha256:2f16a1d7105abb55736c416f444527f34f6f3e90317a5fb26002cb1b0b3942f5
+Copying blob sha256:e405020056e223e070b0b4d6d11719902b87e88ff22505e7fecdd0ab83d88bd7
+Copying blob sha256:a2318d6c47ec9cac5acc500c47c79602bcf953cec711a18bc898911a0984365b
+Copying blob sha256:426ef4eb83d02544ab95906cab7bccecb42ecdd401acc54045bc5cbb93b3ee1c
+Copying blob sha256:37f223cd3b7a071ff92d0822eea16e0bdf1e7f78b9586ff96040cf23ca43c72d
+Copying blob sha256:2fd2333708a2535baa754a3f983d940333fd16a13404e5b16b2e719fa0c05a5f
+Copying blob sha256:a9193c79765419eee839cc974fb3c82fd0baff8d0b1990a52b79e50882a2f54a
+Copying blob sha256:175415c999036a9c80735b9dc96c7823f556b0ede710dd20cb1a2c458f7aebc6
+Copying blob sha256:88ab146977b5bbc26216619ecb60d3b4a6449bc70e13430b861c9a69ab77872c
+Copying blob sha256:5d0d6d069b8317f335dbe51d8c28467141debf3f73025a85ef4b64a5b46f534f
+Copying blob sha256:c31960c64c8798c6c3dfbe55bd52de1a1e4bacfc0ea3401563a31cbf1f7f6484
+Copying blob sha256:edaedb71f264855fc71683d6326da449273f4bda39d4b010d8f2476a7a506afe
+Copying blob sha256:de96e3ff4e81e5991edb31c1cb939ead269fa178814f23ba8569f618d76ee451
+Copying config sha256:b781f3a53e61df916d97dffe6669ef32b08515327ee3a398087115385b5178f5
+Writing manifest to image destination
+547eaab3607ba75af8a0969f008a0cefe521620625c1ca71845350e8c00ed514
++./scripts/init_db.sh:38> export PGPASSWORD=password
++./scripts/init_db.sh:39> psql -h localhost -U postgres -p 5432 -d postgres -c '\q'
+psql: errore: connection to server at "localhost" (::1), port 5432 failed: Connessione rifiutata
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5432 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
++./scripts/init_db.sh:40> echo 'Postgres still unavailable - back to sleep'
+Postgres still unavailable - back to sleep
++./scripts/init_db.sh:41> sleep 1
++./scripts/init_db.sh:39> psql -h localhost -U postgres -p 5432 -d postgres -c '\q'
+psql: errore: connection to server at "localhost" (::1), port 5432 failed: Connessione rifiutata
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5432 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
++./scripts/init_db.sh:40> echo 'Postgres still unavailable - back to sleep'
+Postgres still unavailable - back to sleep
++./scripts/init_db.sh:41> sleep 1
++./scripts/init_db.sh:39> psql -h localhost -U postgres -p 5432 -d postgres -c '\q'
+psql: errore: connection to server at "localhost" (::1), port 5432 failed: Connessione rifiutata
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5432 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
++./scripts/init_db.sh:40> echo 'Postgres still unavailable - back to sleep'
+Postgres still unavailable - back to sleep
++./scripts/init_db.sh:41> sleep 1
++./scripts/init_db.sh:39> psql -h localhost -U postgres -p 5432 -d postgres -c '\q'
+psql: errore: connection to server at "localhost" (::1), port 5432 failed: Connessione rifiutata
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5432 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
++./scripts/init_db.sh:40> echo 'Postgres still unavailable - back to sleep'
+Postgres still unavailable - back to sleep
++./scripts/init_db.sh:41> sleep 1
++./scripts/init_db.sh:39> psql -h localhost -U postgres -p 5432 -d postgres -c '\q'
+psql: errore: connection to server at "localhost" (::1), port 5432 failed: Connessione rifiutata
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5432 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
++./scripts/init_db.sh:40> echo 'Postgres still unavailable - back to sleep'
+Postgres still unavailable - back to sleep
++./scripts/init_db.sh:41> sleep 1
++./scripts/init_db.sh:39> psql -h localhost -U postgres -p 5432 -d postgres -c '\q'
+psql: errore: connection to server at "localhost" (::1), port 5432 failed: Connessione rifiutata
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5432 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
++./scripts/init_db.sh:40> echo 'Postgres still unavailable - back to sleep'
+Postgres still unavailable - back to sleep
++./scripts/init_db.sh:41> sleep 1
++./scripts/init_db.sh:39> psql -h localhost -U postgres -p 5432 -d postgres -c '\q'
++./scripts/init_db.sh:44> echo 'Postgres is up and running on port 5432!'
+Postgres is up and running on port 5432!
++./scripts/init_db.sh:46> export DATABASE_URL=postgres://postgres:password@localhost:5432/cch23
++./scripts/init_db.sh:47> sqlx database create
++./scripts/init_db.sh:48> sqlx migrate run
+Applied 20240915103037/migrate init (169.828602ms)
++./scripts/init_db.sh:50> echo 'Postgres database has been migrated, ready to go!'
+Postgres database has been migrated, ready to go!
