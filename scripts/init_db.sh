@@ -14,12 +14,12 @@ fi
 
 DB_USER="${POSTGRES_USER:=postgres}"
 DB_PASSWORD="${POSTGRES_PASSWORD:=password}"
-DB_NAME="${POSTGRES_DB:=cch23}"
-DB_PORT="${POSTGRES_PORT:=5432}"
+DB_NAME="${POSTGRES_DB:=postgres}"
+DB_PORT="${POSTGRES_PORT:=16695}"
 
 if [[ -z "${SKIP_DOCKER}" ]]
 then
-  docker pod create --name postgres -p 9876:80 -p 5432:5432
+  docker pod create --name postgres -p 9876:80 -p 16695:5432
   docker run --pod="postgres" \
     -e PGADMIN_DEFAULT_EMAIL="admin@email.com" \
     -e PGADMIN_DEFAULT_PASSWORD="password" \

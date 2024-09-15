@@ -27,7 +27,9 @@ struct CommonState {
 
 #[shuttle_runtime::main]
 async fn main(
-    #[shuttle_shared_db::Postgres(local_uri = "postgres://postgres:password@localhost:5432/cch23")]
+    #[shuttle_shared_db::Postgres(
+        local_uri = "postgres://postgres:{secrets.PASSWORD}@localhost:16695/postgres"
+    )]
     pool: PgPool,
 ) -> shuttle_axum::ShuttleAxum {
     sqlx::migrate!()
