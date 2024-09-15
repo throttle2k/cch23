@@ -1,0 +1,12 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\nTRUNCATE TABLE orders\n",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": []
+  },
+  "hash": "36f89a203d2559c1220e3c494fb0f7e839761fa8880fc4eb6f7f4a885b1599c8"
+}
