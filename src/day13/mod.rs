@@ -9,10 +9,18 @@ use sqlx::PgPool;
 
 use crate::CommonState;
 
-async fn reset(State(state): State<CommonState>) -> StatusCode {
+pub async fn reset(State(state): State<CommonState>) -> StatusCode {
     sqlx::query!(
         r#"
 TRUNCATE TABLE orders
+"#
+    )
+    .execute(&state.pool)
+    .await
+    .unwrap();
+    sqlx::query!(
+        r#"
+TRUNCATE TABLE regions
 "#
     )
     .execute(&state.pool)
@@ -35,7 +43,7 @@ SELECT 20231213 as "id!"
 }
 
 #[derive(Deserialize)]
-struct Order {
+pub struct Order {
     id: i32,
     region_id: i32,
     gift_name: String,
@@ -55,7 +63,10 @@ async fn add_order(order: Order, pool: &PgPool) {
     .unwrap();
 }
 
-async fn orders(State(state): State<CommonState>, Json(orders): Json<Vec<Order>>) -> StatusCode {
+pub async fn orders(
+    State(state): State<CommonState>,
+    Json(orders): Json<Vec<Order>>,
+) -> StatusCode {
     for order in orders {
         add_order(order, &state.pool).await;
     }
@@ -105,7 +116,7 @@ async fn orders_popular(State(state): State<CommonState>) -> Json<OrderPopularRe
     }
 }
 
-pub fn get_routes<S>(state: CommonState) -> Router<S> {
+pub fn get_routes(state: CommonState) -> Router {
     Router::new()
         .route("/13/sql", get(sql))
         .route("/13/reset", post(reset))

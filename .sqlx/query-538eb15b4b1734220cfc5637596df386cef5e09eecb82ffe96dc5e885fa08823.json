@@ -1,0 +1,12 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\nTRUNCATE TABLE regions\n",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": []
+  },
+  "hash": "538eb15b4b1734220cfc5637596df386cef5e09eecb82ffe96dc5e885fa08823"
+}

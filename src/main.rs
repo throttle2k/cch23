@@ -4,9 +4,10 @@ use sqlx::PgPool;
 mod day1;
 mod day11;
 mod day12;
-mod day13;
+pub mod day13;
 mod day14;
 mod day15;
+mod day18;
 mod day4;
 mod day5;
 mod day6;
@@ -23,7 +24,7 @@ async fn fake_error() -> StatusCode {
 }
 
 #[derive(Clone)]
-struct CommonState {
+pub struct CommonState {
     pool: PgPool,
 }
 
@@ -52,9 +53,10 @@ async fn main(
         .merge(day8::get_routes())
         .merge(day11::get_routes())
         .merge(day12::get_routes())
-        .merge(day13::get_routes(state))
+        .merge(day13::get_routes(state.clone()))
         .merge(day14::get_routes())
-        .merge(day15::get_routes());
+        .merge(day15::get_routes())
+        .merge(day18::get_routes(state));
 
     Ok(router.into())
 }
