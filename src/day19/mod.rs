@@ -222,7 +222,7 @@ async fn process_chat_message(
             return ControlFlow::Break(());
         }
         _ => {
-            println!(">>> client sent something else: {:?}", msg);
+            println!(">>> client sent something else: {:?} ", msg);
         }
     }
     ControlFlow::Continue(())
