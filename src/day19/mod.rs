@@ -18,15 +18,20 @@ use std::{
     },
 };
 use tokio::sync::{watch, RwLock};
+use tracing::info;
 
+#[tracing::instrument(level = "info", name = "ping", skip(ws))]
 async fn ping(ws: WebSocketUpgrade, State(state): State<SharedState>) -> impl IntoResponse {
+    info!("Entered ping route");
     ws.on_upgrade(|socket| handle_socket(socket, state))
 }
 
+#[tracing::instrument(level = "info", name = "handle_socket", skip(socket))]
 async fn handle_socket(mut socket: WebSocket, state: SharedState) {
+    info!("Entered handle_socket");
     while let Some(msg) = socket.recv().await {
         if let Ok(msg) = msg {
-            match handle_message(msg, &state, &mut socket).await {
+            match handle_ping_message(msg, &state, &mut socket).await {
                 ControlFlow::Continue(_) => continue,
                 ControlFlow::Break(_) => break,
             }
@@ -36,11 +41,13 @@ async fn handle_socket(mut socket: WebSocket, state: SharedState) {
     }
 }
 
-async fn handle_message(
+#[tracing::instrument(level = "info", name = "handle_ping_message", skip(socket))]
+async fn handle_ping_message(
     msg: Message,
     state: &SharedState,
     socket: &mut WebSocket,
 ) -> ControlFlow<(), ()> {
+    info!("Entered handle_ping_message");
     match msg {
         Message::Text(t) => {
             println!(">>> received {}", t);
@@ -86,29 +93,35 @@ async fn handle_message(
     }
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 struct SharedState {
     game_started: Arc<AtomicBool>,
     room_channel: Arc<RwLock<HashMap<usize, watch::Sender<Message>>>>,
     count: Arc<AtomicUsize>,
 }
 
+#[tracing::instrument(level = "info", name = "reset")]
 async fn reset(State(state): State<SharedState>) {
+    info!("Entered reset route");
     state.count.store(0, std::sync::atomic::Ordering::Relaxed);
 }
 
+#[tracing::instrument(level = "info", name = "views")]
 async fn views(State(state): State<SharedState>) -> String {
+    info!("Entered views route");
     state
         .count
         .load(std::sync::atomic::Ordering::Relaxed)
         .to_string()
 }
 
+#[tracing::instrument(level = "info", name = "room", skip(ws))]
 async fn room(
     ws: WebSocketUpgrade,
     State(state): State<SharedState>,
     Path((room_number, user_name)): Path<(usize, String)>,
 ) -> impl IntoResponse {
+    info!("Entered room route");
     if !state.room_channel.read().await.contains_key(&room_number) {
         let (tx, _rx) = watch::channel(Message::Text("{}".to_string()));
         state.room_channel.write().await.insert(room_number, tx);
@@ -116,12 +129,14 @@ async fn room(
     ws.on_upgrade(move |socket| handle_chat_socket(socket, room_number, user_name, state))
 }
 
+#[tracing::instrument(level = "info", name = "handle_chat_socket", skip(socket))]
 async fn handle_chat_socket(
     socket: WebSocket,
     room_number: usize,
     user_name: String,
     state: SharedState,
 ) {
+    info!("Entered handle_chat_socket");
     let (mut sender, mut receiver) = socket.split();
 
     let mut rx = state
@@ -164,12 +179,14 @@ async fn handle_chat_socket(
     };
 }
 
+#[tracing::instrument(level = "info", name = "handle_chat_socket")]
 async fn process_chat_message(
     msg: Message,
     room_number: usize,
     user: String,
     state: SharedState,
 ) -> ControlFlow<(), ()> {
+    info!("Entered process_chat_message");
     match msg {
         Message::Text(text) => {
             let msg = serde_json::from_str::<Value>(&text).unwrap();
