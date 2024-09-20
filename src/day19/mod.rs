@@ -20,13 +20,11 @@ use std::{
 use tokio::sync::{watch, RwLock};
 use tracing::info;
 
-#[tracing::instrument(level = "info", name = "ping", skip(ws))]
 async fn ping(ws: WebSocketUpgrade, State(state): State<SharedState>) -> impl IntoResponse {
     info!("Entered ping route");
     ws.on_upgrade(|socket| handle_socket(socket, state))
 }
 
-#[tracing::instrument(level = "info", name = "handle_socket", skip(socket))]
 async fn handle_socket(mut socket: WebSocket, state: SharedState) {
     info!("Entered handle_socket");
     while let Some(msg) = socket.recv().await {
@@ -39,9 +37,11 @@ async fn handle_socket(mut socket: WebSocket, state: SharedState) {
             break;
         }
     }
+    state
+        .game_started
+        .store(false, std::sync::atomic::Ordering::Relaxed);
 }
 
-#[tracing::instrument(level = "info", name = "handle_ping_message", skip(socket))]
 async fn handle_ping_message(
     msg: Message,
     state: &SharedState,
@@ -100,13 +100,11 @@ struct SharedState {
     count: Arc<AtomicUsize>,
 }
 
-#[tracing::instrument(level = "info", name = "reset")]
 async fn reset(State(state): State<SharedState>) {
     info!("Entered reset route");
     state.count.store(0, std::sync::atomic::Ordering::Relaxed);
 }
 
-#[tracing::instrument(level = "info", name = "views")]
 async fn views(State(state): State<SharedState>) -> String {
     info!("Entered views route");
     state
@@ -115,7 +113,6 @@ async fn views(State(state): State<SharedState>) -> String {
         .to_string()
 }
 
-#[tracing::instrument(level = "info", name = "room", skip(ws))]
 async fn room(
     ws: WebSocketUpgrade,
     State(state): State<SharedState>,
@@ -129,7 +126,6 @@ async fn room(
     ws.on_upgrade(move |socket| handle_chat_socket(socket, room_number, user_name, state))
 }
 
-#[tracing::instrument(level = "info", name = "handle_chat_socket", skip(socket))]
 async fn handle_chat_socket(
     socket: WebSocket,
     room_number: usize,
@@ -179,7 +175,6 @@ async fn handle_chat_socket(
     };
 }
 
-#[tracing::instrument(level = "info", name = "handle_chat_socket")]
 async fn process_chat_message(
     msg: Message,
     room_number: usize,
