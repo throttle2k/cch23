@@ -11,6 +11,7 @@ mod day18;
 mod day19;
 mod day20;
 mod day21;
+mod day22;
 mod day4;
 mod day5;
 mod day6;
@@ -62,7 +63,8 @@ async fn main(
         .merge(day18::get_routes(state))
         .merge(day19::get_routes())
         .merge(day20::get_routes())
-        .merge(day21::get_routes());
+        .merge(day21::get_routes())
+        .merge(day22::get_routes());
 
     Ok(router.into())
 }
